@@ -31,7 +31,8 @@ def read_asin_csv(fn):
 
 def read_reviews(driver, file):
 
-    base_url = 'https://www.amazon.com/product-reviews/'
+    #base_url = 'https://www.amazon.com/product-reviews/'
+    base_url = 'https://www.amazon.com/'
 
     browser = webdriver.Chrome(chrome_options=chrome_options,executable_path=driver)
     asins = read_asin_csv(file)
@@ -39,10 +40,31 @@ def read_reviews(driver, file):
 
     if len(asins) > 0:
         for asin in asins:
-            review_dict = {asin: {"ratings": [], "review-titles": [], "variations": [], "reviews": [], "review-links": [], "review-date": [], "verified": [], }}
+            review_dict = {asin: {"ratings": [], "review-titles": [], "variations": [], "reviews": [], "review-links": [], "review-date": [], "verified": [], "category": [], }}
+
+            url_cat = base_url + 'dp/' + asin
+            browser.get(url_cat)
+            source = browser.page_source
+
+            soup = BS(source, 'html.parser')
+
+            categ = soup.find_all('a',
+                        {'class': 'a-link-normal a-color-tertiary'})  #category
+            #print(categ)
+            #categ_text = [(c.text) for c in categ]
+            categories = ''
+            print(categ)
+            for c in categ:
+                categories = categories + (c.text).strip() + ", "
+            #categ_nospace = [x.strip() for x in categ_text]
+            #print(categ_text[0])
+            #print(''.join(categ_text))
+            #categ = ''.join(categ_text)
+            print(categories)
+            categ = categories
 
             # get reviews page count
-            url = base_url + asin
+            url = base_url + 'product-reviews/' + asin
             browser.get(url)
             source = browser.page_source
 
@@ -125,6 +147,7 @@ def read_reviews(driver, file):
                     review_text = [rev.text.replace('\U0001f44d', '').replace('\U0001f4a9', '') for rev in review_text]
                     for review in review_text:
                         review_dict[asin]['reviews'].append(review)
+                        review_dict[asin]['category'].append(categ)
                     if len(variations) != 0:
                         for v in variations:
                             review_dict[asin]['variations'].append(v)
@@ -142,7 +165,7 @@ def read_reviews(driver, file):
             print(len(review_dict[asin]['review-titles']))
             print(len(review_dict[asin]['review-links']))
             print(len(review_dict[asin]['review-date']))
-            print(len(review_dict[asin]['verified']))
+            print(len(review_dict[asin]['category']))
 
             for rr in range(len(review_dict[asin]['reviews'])):
                 #print("test")
@@ -152,11 +175,11 @@ def read_reviews(driver, file):
                 try:
                     data_tuples.append((review_dict[asin]['ratings'][rr], review_dict[asin]['review-titles'][rr],
                                         review_dict[asin]['variations'][rr], review_dict[asin]['reviews'][rr], 
-                                        review_dict[asin]['review-links'][rr], review_dict[asin]['review-date'][rr], review_dict[asin]['verified'][rr]))
+                                        review_dict[asin]['review-links'][rr], review_dict[asin]['review-date'][rr], review_dict[asin]['verified'][rr], review_dict[asin]['category'][rr]))
                 except IndexError:
                     data_tuples.append((review_dict[asin]['ratings'][rr], review_dict[asin]['review-titles'][rr],
                                         'N/A', review_dict[asin]['reviews'][rr], 
-                                        review_dict[asin]['review-links'][rr], review_dict[asin]['review-date'][rr], 'N/A'))
+                                        review_dict[asin]['review-links'][rr], review_dict[asin]['review-date'][rr], 'N/A', review_dict[asin]['category'][rr]))
             products.append({"asin": asin, "title": product_title, "data": data_tuples})
 
         browser.close()
