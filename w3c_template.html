@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+/* Add a gray background color with some padding */
+body {
+  font-family: Arial;
+  padding: 20px;
+  background: #f1f1f1;
+}
+
+/* Header/Blog Title */
+.header {
+  padding: 30px;
+  font-size: 40px;
+  text-align: center;
+  background: white;
+}
+
+/* Create two unequal columns that floats next to each other */
+/* Left column */
+.leftcolumn {   
+  float: center;
+  width: 60%;
+}
+
+/* Right column */
+.rightcolumn {
+  float: left;
+  width: 25%;
+  padding-left: 20px;
+}
+
+/* Fake image */
+.fakeimg {
+  background-color: #aaa;
+  width: 100%;
+  padding: 20px;
+}
+
+/* Add a card effect for articles */
+.card {
+   background-color: white;
+   padding: 20px;
+   margin-top: 20px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Footer */
+.footer {
+  padding: 20px;
+  text-align: center;
+  background: #ddd;
+  margin-top: 20px;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 800px) {
+  .leftcolumn, .rightcolumn {   
+    width: 100%;
+    padding: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h2>Top cute things you can buy right now</h2>
+</div>
+
+<div class="row">
+  <div class="leftcolumn">
+    <div class="card">
+      <h2>Great shoes for a good price</h2>
+      <h5>Clothing, Shoes, Jewelry, Women, Shoes, Flats </h5>
+      
+      <img src="https://images-na.ssl-images-amazon.com/images/I/813wcgtgTFL._UY575_.jpg"> 
+      <h3><p>Cute, comfy, I got a 9, I usually wear 9.5 a little snug at first, but I broke them in in no time, and now they are very comfortable. Most of all I enjoy wearing this shoe, it is soft, flexible, light feeling, and comfortable. I'm very happy with the color, style, and comfort of these shoes and would consider buying another pair in a different color..</p></h3>
+    </div>
+    <div class="card">
+      <h2>Arrived with wrinkles, gifts for kids, we shall see</h2>
+      <h5>Toys, Games, Baby, Toddler, Toys, Activity, Play, Centers</h5>
+      <img src="https://images-na.ssl-images-amazon.com/images/I/51GMQFLIkNL._SX569_.jpg">
+      <h3><p>Still, for the size,price, and to use it is overall a good buy and a good alternative to feeling bad about using a more expensive one. I guess this isn't okay product, I feel like I could have gone to local stores for the same price and gotten better quality. I thought I ordered the pink one, but got a brown one</p></h3>
+    </div>
+
+    <div class="card">
+      <h2>Very cute, big mug, durable to washing </h2>
+      <h5>Home, Kitchen, Kitchen, Dining, Dining, Entertaining, Novelty, Drinkware, Coffee, Mugs</h5>
+      
+      <img src="https://images-na.ssl-images-amazon.com/images/I/61h7qAfFkwL._SX569_.jpg"> 
+      <h3><p>This is the new favorite because the mug stays cool while the drink gets hot in the microwave (and the little cat!). "Jessie" was a wonderful, smart and beautiful cat and we added a brother for her soon, another Black cat. I bought this mug for my sister who’s other (less adorable) cat mug broke.</p></h3>
+    </div>
+
+    <div class="card">
+      <h2>Cute, fun, storage solution </h2>
+      <h5>Home, Kitchen, Bath, Bathroom, Accessories, Holders, Dispensers, Toothbrush, Holders</h5>
+      
+      <img src="https://images-na.ssl-images-amazon.com/images/I/31TiMdQ2tvL.jpg"> 
+      <h3><p>I bought this to go in our shower, it does hold two toothbrushes (which is why I bought it), but it didn't stick to our tile. Nice and sturdy, and mine is packed with two toothbrushes, a full size Sensodyne, a tongue scraper and floss picks. I wish I understood the strange magic that hold this to the wall of my shower, but it works, its amazing.</p></h3>
+    </div>
+
+    <div class="card">
+      <h2>Too cute!</h2>
+      <h5>Toys, Games, Stuffed, Animals, Plush, Toys</h5>
+      
+      <img src="https://images-na.ssl-images-amazon.com/images/I/81Z0ZD-0P2L._SX679_.jpg"> 
+      <h3><p>This size is more small accent pillow(for a chair ) than floor pillow(like the full sized ones). It's a perfect size, not too big and not too small, just right. The 'cheese' part of the pillow is like a orange velvet.I do think it's a little pricy, but I couldn't resist.</p></h3>
+    </div>
+
+  </div>
+</div>
+
+
+</body>
+</html>
