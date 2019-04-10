@@ -1,3 +1,6 @@
+# helpers.py
+# The following code was partially adapted from Abe Flansburg (https://github.com/aflansburg)
+
 from bs4 import BeautifulSoup as BS
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -19,8 +22,7 @@ def is_valid_file(parser, arg):
     else:
         return arg  # return the file path
 
-
-def read_asin_csv(fn):
+def read_asin_csv(fn):  #read the list of product ID's from scraped articles
     asin_list = []
     with open(fn, newline='') as csvfile:
         asin_reader = csv.reader(csvfile, delimiter=',')
@@ -28,9 +30,7 @@ def read_asin_csv(fn):
             asin_list.append(row[0])
     return asin_list
 
-
-def read_reviews(driver, file):
-
+def read_reviews(driver, file):     #read reviews through the use of chrome driver
     #base_url = 'https://www.amazon.com/product-reviews/'
     base_url = 'https://www.amazon.com/'
 
@@ -39,7 +39,7 @@ def read_reviews(driver, file):
     products = []
 
     if len(asins) > 0:
-        for asin in asins:
+        for asin in asins:  #for each of the asins get corresponding review information
             review_dict = {asin: {"ratings": [], "review-titles": [], "variations": [], "reviews": [], "review-links": [], "review-date": [], "verified": [], "category": [], }}
 
             url_cat = base_url + 'dp/' + asin
@@ -49,18 +49,13 @@ def read_reviews(driver, file):
             soup = BS(source, 'html.parser')
 
             categ = soup.find_all('a',
-                        {'class': 'a-link-normal a-color-tertiary'})  #category
+                        {'class': 'a-link-normal a-color-tertiary'})  #scrape the category of product
             #print(categ)
             #categ_text = [(c.text) for c in categ]
             categories = ''
-            print(categ)
             for c in categ:
                 categories = categories + (c.text).strip() + ", "
-            #categ_nospace = [x.strip() for x in categ_text]
-            #print(categ_text[0])
-            #print(''.join(categ_text))
-            #categ = ''.join(categ_text)
-            print(categories)
+            #print(categories)
             categ = categories
 
             # get reviews page count
@@ -85,6 +80,7 @@ def read_reviews(driver, file):
             else:
                 product_title = 'No title found'
 
+            #iterate through all pages
             if page_count > 0:
                 print(f'Page count: {str(page_count)}')
                 for i in range(page_count):
@@ -95,10 +91,7 @@ def read_reviews(driver, file):
                     html = browser.page_source
                     paged_soup = BS(html, 'html.parser')
                     stars = paged_soup.find_all('i', {'data-hook': 'review-star-rating'})
-                    #print(stars)
-                    #stars = paged_soup.find_all('div', {'data-hook': 'review'})
                     stars = [s for s in stars if 'stars' in s.text]
-                    #print(stars)
                     for star in stars:
                         if 'stars' in star.text:
                             regex = "(\d.\d)"
@@ -107,20 +100,14 @@ def read_reviews(driver, file):
                             review_dict[asin]['ratings'].append(match.group(0))
                     review_titles = paged_soup.find_all('a',
                           {'class': 'a-size-base a-link-normal review-title a-color-base review-title-content a-text-bold'})
-
-                    #helpful_votes = paged_soup.find_all('span',
-                    #      {'class': 'a-size-base a-color-secondary review-date'})
                     review_date = paged_soup.find_all('span',
                           {'data-hook': 'review-date'})
                     verified = paged_soup.find_all('span',
                         {'class': 'a-size-mini a-color-state a-text-bold'})
-                          #{'class': 'a-size-base a-link-normal review-title a-color-base a-text-bold'})
-                    #print(helpful_votes)
                     review_titles = [r.text for r in review_titles]
-                    #helpful_votes = [h.text for h in helpful_votes]
                     review_date = [h.text for h in review_date]
                     verified = [h.text for h in verified]
-                    variations = paged_soup.find_all('span', {'class': 'a-color-secondary'})
+                    variations = paged_soup.find_all('span', {'class': 'a-color-secondary'})    #get info for different variations of the product
                     variations_2 = paged_soup.find_all('a', {'class': 'a-size-mini a-link-normal a-color-secondary'})
                     if variations:
                         variations = [v.text for v in variations if 'Color' in v.text or 'Size' in v.text]
@@ -132,14 +119,11 @@ def read_reviews(driver, file):
                             variations.append(v)
                     links = paged_soup.find_all('a',
                           {'class': 'a-size-base a-link-normal review-title a-color-base review-title-content a-text-bold'}, href=True)
-                            #{'class': 'a-size-base a-link-normal review-title a-color-base a-text-bold'}, href=True)
                     links = ["https://www.amazon.com%s" % l['href'] for l in links]
                     for ll in links:
                         review_dict[asin]['review-links'].append(ll)
                     for rt in review_titles:
                         review_dict[asin]['review-titles'].append(rt)
-                    #for hv in helpful_votes:
-                    #    review_dict[asin]['helpful-votes'].append(hv)
                     for rd in review_date:
                         review_dict[asin]['review-date'].append(rd)
                     
@@ -160,18 +144,10 @@ def read_reviews(driver, file):
                         review_dict[asin]['verified'] = [""] * len(review_dict[asin]['reviews'])
             data_tuples = []
 
-            print("--------------------")
-            print(len(review_dict[asin]['ratings']))
-            print(len(review_dict[asin]['review-titles']))
-            print(len(review_dict[asin]['review-links']))
-            print(len(review_dict[asin]['review-date']))
-            print(len(review_dict[asin]['category']))
+            #append all scraped info to dict
 
             for rr in range(len(review_dict[asin]['reviews'])):
-                #print("test")
-                #print(len(review_dict[asin]['reviews']))
-                #print(review_dict[asin]['ratings'][0])
-
+                #to avoid getting errors from empty fields
                 try:
                     data_tuples.append((review_dict[asin]['ratings'][rr], review_dict[asin]['review-titles'][rr],
                                         review_dict[asin]['variations'][rr], review_dict[asin]['reviews'][rr], 
@@ -183,6 +159,5 @@ def read_reviews(driver, file):
             products.append({"asin": asin, "title": product_title, "data": data_tuples})
 
         browser.close()
-        # should return an object with all info here (or write out to csv)
         return products
 

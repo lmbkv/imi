@@ -1,25 +1,19 @@
+# amzreviewscrape.py
+# The following code was partially adapated from Abe Flansburg (https://github.com/aflansburg)
+
 from helpers import read_reviews
 from helpers import is_valid_file
-import argparse
 import os
 import csv
 import io
 
-argparser = argparse.ArgumentParser()
-argparser.add_argument("-asins", dest="filename", required=True, help="Enter the path to your ASIN file.",
-                       type=lambda x: is_valid_file(argparser, x))
-args = argparser.parse_args()
 
-inputFile = args.filename
-print(inputFile)
+inputFile = '/scraped/'
+#print(inputFile)
 
-# check for current os
+# Chrome driver
 if os.name == 'posix':
-    # osx
     driver_path = '/usr/bin/chromedriver'
-elif os.name == 'nt':
-    # win32
-    driver_path = 'C:\chromedriver\chromedriver'
 else:
     print('Unknown operating system!!!')
     exit()
@@ -38,14 +32,14 @@ for product_reviews in data:
     for _d in _data:
         expanded_reviews.append([_asin, _title, _d[0], _d[1], _d[2], _d[3], _d[4], _d[5], _d[6], _d[7]])
 
-with io.open('output_cat.csv', 'w', encoding="utf-8", newline='') as dataFile:
+with io.open('reviews.csv', 'w', encoding="utf-8", newline='') as dataFile:
     writer = csv.writer(dataFile, delimiter=',')
 
     writer.writerow(field_names)
     for e in expanded_reviews:
         writer.writerow(e)
 
-    print(f'Output written to "output.csv"')
+    print(f'Output written to "reviews.csv"')
 
 
 
