@@ -1,8 +1,8 @@
 # amazon_reviews_scraper.py
 # The following code was partially adapated from Abe Flansburg (https://github.com/aflansburg)
 
-from helpers import read_reviews
-from helpers import is_valid_file
+from amzbs4 import read_reviews
+from amzbs4 import is_valid_file
 import os
 import csv
 import io
