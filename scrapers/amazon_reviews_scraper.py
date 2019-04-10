@@ -1,4 +1,4 @@
-# amzreviewscrape.py
+# amazon_reviews_scraper.py
 # The following code was partially adapated from Abe Flansburg (https://github.com/aflansburg)
 
 from helpers import read_reviews
