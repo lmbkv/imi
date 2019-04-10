@@ -1,19 +1,8 @@
-from bs4 import BeautifulSoup as BS
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-import csv
-import math
-import re
-import pprint
 import os.path
 
 import argparse
 import os
 import io
-
-#pp = pprint.PrettyPrinter(indent=4)
-
-
 
 def read_products_csv(fn):
     links_list = []
@@ -31,21 +20,16 @@ def get_asin(file):
         for link in links:
             if("amazon" in link):
                 asin.append((link.rsplit('/dp/', 1)[1]).split('?')[0])
-                #asin.append(link.split("/dp/ ?"))
     return asin
  
 
-
-
 if __name__ == "__main__":
-    inputFile = "1.csv"
+    #load csv file with list of product links to get corresponding asins
+    inputFile = "asins.csv"
     asin_list = get_asin(inputFile)
 
+    #write asins into file
     with open("asins.csv", 'w', newline='') as myfile:
         wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
         for i in asin_list:
             wr.writerow([i])
-        
-    
-    #print(links)
-    #print(len(links))
